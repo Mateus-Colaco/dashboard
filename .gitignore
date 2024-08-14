@@ -1,6 +1,8 @@
-tests/
 __pycache__/
-*.ipynb
+.vscode/
+data/
+logs/
+tests/
 .env
 autenticar.py
-.vscode/
+*.ipynb

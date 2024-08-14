@@ -8,7 +8,7 @@ os.chdir(sys.argv[1])
 sys.path.append(os.getcwd())
 from cloud.RDS import RDS, inserir
 import pandas as pd
-from autenticar import token
+from ons.api.autenticar import token
 import os, requests
 
 
@@ -38,6 +38,9 @@ def salva_no_banco(host: str, pssd: str):
     )
 
 
-if __name__ == '__main__': 
+def main(): 
     HOST = 'database-chuva-vazao-exp.c7c6qwyy8ksr.us-east-1.rds.amazonaws.com'
     salva_no_banco(HOST, os.getenv('db_pssd'))
+
+
+if __name__ == '__main__': main()
