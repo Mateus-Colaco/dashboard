@@ -1,7 +1,9 @@
+assets/
 __pycache__/
 .vscode/
 data/
 logs/
+app/
 tests/
 .env
 autenticar.py

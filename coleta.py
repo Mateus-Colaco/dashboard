@@ -11,8 +11,8 @@ def carga_prevista():
     if not((execucao > manha) and (execucao < noite)) or (not os.path.exists('./data/bronze/carga_previsao.parquet')):
         api_carga_prevista.main()
         proc_carga_prevista.main()
-        return 'Carga Prevista atualizada.'
-    return 'Carga Prevista ja esta atualizada.' 
+        print(f"[coleta.py] {datetime.now().strftime('%Y-%m-%d %H:%M')} 'Carga Prevista atualizada.'")
+
 
 
 def encontra_todos_pycache(root_dir):
@@ -45,6 +45,6 @@ def main():
     os.chdir(cwd)
     remove_pycache()
     energia_agora()
-    print(f"[coleta.py] {datetime.now().strftime('%Y-%m-%d %H:%M')} {carga_prevista()}")
+    
 
 if __name__ == '__main__': main()
