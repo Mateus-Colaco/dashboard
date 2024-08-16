@@ -27,7 +27,7 @@ def salva_parquet(df_previsao: pd.DataFrame):
     condicao_quantidade_de_dados = df_previsao.shape[0] > 100
     if condicao_quantidade_de_dados and condicao_data:
         try:
-            df_previsao.to_parquet('data/bronze/carga_previsao.parquet')
+            df_previsao.to_parquet('data/silver/carga_previsao.parquet')
         except: print(f'[processamento/carga_prevista.py] {datetime.now().strftime("%Y-%m-%d %H:%M")} Nao foi possivel salvar o arquivo de previsao de carga caminho atual = ({os.getcwd()})')
 
 

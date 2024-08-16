@@ -33,8 +33,8 @@ class Visualizacao:
 
     def inicializa_grafico(self, dados: DataFrame, colunas: list[str]): pass
 
-    def titulo(self, texto: str, bold: bool=True, font_family: str='', font_size: int=30, posicao_x: float=0.5, posicao_y: float=0.975):
-        if bold: texto = f'<b>{texto}</b>\n'
+    def titulo(self, texto: str, bold: bool=True, font_family: str='', font_size: int=30, posicao_x: float=0.25, posicao_y: float=0.975):
+        if bold: texto = f'<b style="color: #113759;">{texto}</b>\n'
         if not font_family: font_family = 'sans-serif'
 
         self.figura.update_layout(

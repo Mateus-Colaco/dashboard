@@ -7,7 +7,7 @@ os.chdir('../chuva-vazao')
 sys.path.append(os.getcwd())
 
 from cloud.RDS import RDS
-
+from ons.processamento.Classes.Geracao import ByRegiao, ByFonte
 os.chdir(cwd)
 REGIOES = ['seco', 's', 'n', 'ne']
 FONTES = ['eolica', 'hidraulica', 'nuclear', 'solar', 'termica']
@@ -20,6 +20,13 @@ def arruma_minutos(dt: datetime) -> datetime:
         return dt.replace(minute=0, second=0, microsecond=0)
     return dt.replace(minute=rounded_minutes, second=0, microsecond=0)
 
+
+def dados_dashboard():
+    dados_regiao = ByRegiao()
+    dados_fonte = ByFonte()
+
+    dados_regiao.gera_dados_dashboard()
+    dados_fonte.gera_dados_dashboard()
 
 def insere_carga_liq(df: pd.DataFrame) -> pd.DataFrame:
     df.insert(0,'sin_carga_liq', df.sin_carga_verif - df[['sin_g_eolica', 'sin_g_solar']].sum(axis=1))
@@ -58,7 +65,7 @@ def insere_totais(df: pd.DataFrame) -> pd.DataFrame:
 def salva_parquet(df: pd.DataFrame): 
     condicao_data_index = (df.index.date.min() == df.index.date.max())
     condicao_data = condicao_data_index and (df.index.date.min() == datetime.now().date())
-    if condicao_data: df.to_parquet('data/bronze/carga_agora.parquet')
+    if condicao_data: df.to_parquet('data/silver/carga_agora.parquet')
     
 
 def main():
@@ -68,3 +75,8 @@ def main():
     df.data = pd.to_datetime(df.data.dt.tz_convert('Etc/GMT+3').dt.strftime('%Y-%m-%d %H:%M')).apply(arruma_minutos)
     df = insere_totais(df.loc[df.data <= datetime.now()].set_index('data'))
     salva_parquet(insere_carga_liq(df))
+    # Cria os arquivos para os graficos de pizza do dashboard 
+    # divisao de fonte por regiao [grafico_{regiao}]
+    # divisao de regiao por fonte [grafico_{regiao}]
+    dados_dashboard() 
+    
