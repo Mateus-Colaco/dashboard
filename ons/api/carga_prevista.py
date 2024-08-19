@@ -15,7 +15,7 @@ def arruma_horario_utc(df: pd.DataFrame, data_ref: datetime, data_previsao) -> p
     df.data = pd.to_datetime(df.data.dt.strftime('%Y-%m-%d %H:%M:%S'))
     data_previsao = datetime.strptime(data_previsao, '%Y-%m-%d').date()
     df.insert(0, 'data_previsao', data_ref)
-    return df.loc[df.data.dt.date == data_previsao].reset_index(drop=True)
+    return df[df.data.dt.date == data_previsao].reset_index(drop=True)
 
 
 def arruma_colunas(df: pd.DataFrame) -> pd.DataFrame:
@@ -49,13 +49,15 @@ def prepara_dados(df: pd.DataFrame, data_ref: datetime, data_previsao: datetime)
 def salva_no_banco(host: str, pssd: str, headers: dict[str, str], data_ref: datetime, data_previsao: datetime) -> None:
     previsao = carga_prevista(headers, data_ref, data_previsao)
     df = prepara_dados(previsao, data_ref, data_previsao)
-    rds = RDS('ons', pssd, host)
-    inserir(
-        data=df, 
-        nome_tabela='carga_prevista', 
-        rds=rds, 
-        transform=False
-    )   
+    if df.shape[0] >= 4:
+        rds = RDS('ons', pssd, host)
+        inserir(
+            data=df, 
+            nome_tabela='carga_prevista', 
+            rds=rds, 
+            transform=False
+        )
+    else: print(f'Dados de carga prevista insuficientes {datetime.now()} // data_previsao: {data_previsao} // data_referencia: {data_ref}')
 
 
 def main():
